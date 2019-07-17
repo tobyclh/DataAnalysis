@@ -40,15 +40,17 @@ def lrls(x, y, h=1., l=1., nu=1.):
 
     K = kernel(x, x)
     W = K.copy()
-    theta = np.random.randn(200)
-    t1 = (K.T.dot(theta) - y)**2
-    print(t1)
-    t2 = (sum(theta**2))**0.5
-    print(t2)
-    t3 = sum()
-
-
-    return 
+    m = W.shape[0]
+    D = np.zeros([m, m])
+    for j in range(m):        
+        D[j, j] = W[j].sum()
+    L = D - W
+    K = K.T
+    A = K.T.dot(K) + np.eye(m) + 2 * K.T.dot(L).dot(K)
+    B = K.T.dot(y)
+    theta = np.linalg.solve(A, B)
+    # print(theta.shape)
+    return theta
 
 
 
@@ -73,6 +75,6 @@ def visualize(x, y, theta, h=1.):
 
 
 x, y = generate_data(n=200)
-print(y.shape)
+# print(y.shape)
 theta = lrls(x, y, h=1.)
 visualize(x, y, theta)
